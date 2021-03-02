@@ -488,7 +488,7 @@ I seem to listen to more energetic songs as time goes on! 2014 seemed to be the 
 ### _Some Key Songs' Topics_  
 
 </center>
-Now, let's go back to the output from the structural topic model we ran in the [Modeling the data](#modeling-the-data) section. Here are the gamma values (probabilities of a topic within a song) for a handful of songs that I picked out of arbitrary interest for this visualization. This visualization is just to show the variability in evenness of gammas across songs.
+Now, let's go back to the output from the structural topic model we ran in the [Modeling the data](#modeling-the-data) section. Here are the gamma values (probabilities of a topic within a song) for a handful of songs that I picked out of arbitrary interest. This visualization is just to show the variability in evenness of gammas across songs.
 
 ```{r chunk, warning = FALSE, message = FALSE, fig.align = 'center'}
 group_colors1 <- c(`glow up` = "#B6B4C2", 
