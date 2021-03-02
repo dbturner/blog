@@ -1,0 +1,19 @@
+name: "dans-website"
+output_dir: "."
+navbar:
+  title: "Dan Turner"
+  right:
+    - text: "Home"
+      href: https://dbturner.github.io/index.html
+    - text: "Research"
+      href: https://dbturner.github.io/research.html
+    - text: "Publications"
+      href: https://dbturner.github.io/publications.html
+    - text: "Blog"  
+      href: https://dbturner.github.io/blog
+
+output:
+  rmarkdown::html_document:
+    theme: sandstone
+    toc: true
+    toc_float: true
