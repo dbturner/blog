@@ -1,5 +1,10 @@
----
-title: Blog
----
+<br>  
 
-- 2 March 2021 - [_Grad School Musical: topic modeling and my Spotify Top 100 Songs_](2March2021_spotify_100_stm.html)
+# Blog Posts:  
+
+<hr>
+
+
+## _2021_
+
+### - [_Grad School Musical: topic modeling and my Spotify Top 100 Songs_](2March2021_spotify_100_stm.html) (2 March)
