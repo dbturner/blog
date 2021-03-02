@@ -87,16 +87,16 @@ _In this post, I will..._
 * To connect these songs to their lyrics, I used the [`geniusr` R package](https://ewenme.github.io/geniusr/) to search the lyrics for each song. This step was tough because some of my top songs are instrumental or remixes and didn’t fit well into my search loop. For those songs, I searched for lyrics separately. 
 
 <br>
-To assemble a dataset that could be useful to interpret with structural topic models, I had to remove songs were the majority of the lyrics were not in English and filter out stop words like 'oh' and 'ayy.' A future blog post may model songs with lyrics mostly in Spanish. Since this blog is not about collecting data from the Spotify and Genius APIs, I'm not going to highlight it here. However, to see a skeleton of the code I wrote (minus my playlist IDs and manual song entry), please see this post's source code [here](https://github.com/dbturner/dbturner.github.io/blob/main/blog/blog_1_spotify_100_stm.Rmd).
+To assemble a dataset that could be useful to interpret with structural topic models, I had to remove songs were the majority of the lyrics were not in English. A future blog post may model songs with lyrics mostly in Spanish. Since this blog is not about collecting data from the Spotify and Genius APIs, I'm not going to highlight it here. However, to see a skeleton of the code I wrote (minus my playlist IDs and manual song entry), please see this post's source code [here](https://github.com/dbturner/dbturner.github.io/blob/main/blog/blog_1_spotify_100_stm.Rmd).
 
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE, tidy.opts=list(width.cutoff=20)}
-setwd("~/Downloads")
+setwd("~/Downloads") # set to local directory
 
-load("lyrics_df.rda")
-load("tracks_full.rda")
-load("lyrics_en.rda")
-load("stms.rda")
+load("tracks_full.rda") # load spotify audio feature data and names of songs from top 100 playlists
+load("lyrics_df_en.rda") # load all lyrics including stopwords
+load("lyrics_en.rda") # load 'clean' lyrics without stopwords here because we aren't listing all filtered words below
+load("stms.rda") # load stm results here to reduce rendering time for blog post
 ```
 
 
@@ -213,38 +213,10 @@ lyrics <- lyrics_list
 
 names(lyrics) <- tracks_full$track.name
 
-track_names <- as.data.frame(tracks_full$track.name)
-colnames(track_names)[1] <- "track.name"
-
-track_names$artist <- tracks_full$artist
-track_names$needs_lyrics <- NA
-track_names$track.name.abr <- tracks_full$track.name.abr
-
 '%!in%' <- function(x,y)!('%in%'(x,y))  
 
 lyrics_df_en <- lyrics %>%
   filter(artist_name %!in% c("BLACKPINK", "Bad Bunny, Jowell & Randy & Ñengo Flow", "Bad Bunny & Sech", "Bad Bunny & Jhay Cortez", "Bad Bunny", "ROSALÍA", "ROSALÍA & J Balvin", "C. Tangana", "Stromae", "MC Fioti", "Salvador Sobral", "J Balvin", "Romeo Santos", "Tiago Bettencourt", "ROSALÍA & Travis Scott", "Bomba Estéreo", "Carlos Vives", "Shakira", "Carlos Vives & Shakira", "Danny Ocean", "Calle 13", "Enrique Iglesias", "Major Lazer", "Anitta", "Don Patricio", "Maluma", "Becky G & Bad Bunny", "J Balvin & Willy William")) # only include majority English language songs
-
-tidy_lyrics_en <- lyrics_df_en %>%
-  group_by(section_name, section_artist, song_name, song_id, artist_name, row) %>%
-  mutate(line_number = row_number()) %>%
-  mutate(song_artist = paste(song_name, artist_name, row, sep = "_")) %>%
-  unnest_tokens(word, line) %>%
-  ungroup()
-
-explicit <- c("STRING-OF-WORDS")
-more_stopwords <- c("oh", "ah", "uh", "ooh", "aah", "mu", "woo", "oo", "eh", "di", "da", "ayy", "doo", "doot", "hmm")
-
-lyrics_en <- tidy_lyrics_en %>%
-  anti_join(get_stopwords(language = "en")) %>%
-  anti_join(get_stopwords(language = "es")) %>%
-  filter(word %!in% explicit)
-
-lyrics_en <- as_tibble(lyrics_en) %>%
-  filter(word %!in% more_stopwords)
-
-lyrics_en %>%
-  count(word, sort = TRUE)
 ```
 
 <hr>
@@ -255,13 +227,17 @@ After binding the Spotify and Genius dataframes, I used the `tidytext` R package
 
 <br>
 We'll start with the song lyrics in English and split each song into individual words with `unnest_token()`.   
-Note: 'section_name' refers to chorus, bridge, verse, etc.; 'row' is the unique row identifier because some songs appear in multiple years.
+Note: 'section_name' refers to chorus, bridge, verse, etc.; 'row' is the unique row identifier because some songs appear in multiple years. As a reminder, I'm uploading the data locally to avoid publicly sharing it.
 ```{r load_libraries, message = FALSE, warning = FALSE, tidy.opts=list(width.cutoff=20)}
 library(tidytext)
 library(stm)
 library(dplyr)
 ```
 ```{r prep_lyrics, eval = FALSE, message = FALSE, warning = FALSE, tidy.opts=list(width.cutoff=20)}
+
+load("tracks_full.rda")
+load("lyrics_df_en.rda")
+
 tidy_lyrics_en <- lyrics_df_en %>%
   group_by(section_name, section_artist, song_name, song_id, artist_name, row) %>%
   mutate(line_number = row_number()) %>%
@@ -271,14 +247,13 @@ tidy_lyrics_en <- lyrics_df_en %>%
 ```
 
 <br>
-Let's remove most of the words that appear frequently and don't have much meaning outside the music.
+Let's remove most of the words that appear frequently and don't have much meaning outside the music. We'll take out stopwords mostly in English and lingering stopwords in Spanish from bilingual songs.
 ```{r remove_stopwords, eval = FALSE, message = FALSE, warning = FALSE, tidy.opts=list(width.cutoff=20)}
 more_stopwords <- c("oh", "ah", "uh", "ooh", "aah", "mu", "woo", "oo", "eh", "di", "da", "ayy", "doo", "doot", "hmm") # I also added some other words to maintain a 'clean' lyric analysis that aren't included here.
 
 lyrics_en <- tidy_lyrics_en %>%
   anti_join(get_stopwords(language = "en")) %>%
-  anti_join(get_stopwords(language = "es")) %>%
-  filter(word %!in% explicit)
+  anti_join(get_stopwords(language = "es"))
 
 lyrics_en <- as_tibble(lyrics_en) %>%
   filter(word %!in% more_stopwords)
@@ -535,7 +510,7 @@ group_colors1 <- c(`glow up` = "#B6B4C2",
 ggplot(gamma_abr, aes(x = song, y = gamma, fill = label)) +
   geom_bar(stat = "identity", position = "stack") +
   scale_fill_manual(values = group_colors1) +
-  labs(y = "Gamma values for each song") +
+  labs(y = "Gamma values by song") +
   coord_flip() +
   theme_classic() +
   theme(legend.title = element_blank(),
@@ -543,7 +518,7 @@ ggplot(gamma_abr, aes(x = song, y = gamma, fill = label)) +
         text = element_text(size=12))
 ```
 
-Kind of cool that "Loyalty" by Kendrick Lamar has a pretty high gamma value for 'longing.' Meanwhile, "About Today" by The National (a sad, sad song about losing love) had higher gamma values for more topics, but the highest topic prob was 'in my feelings' (topic keywords include: falling, love, apart, drift).
+Kind of cool that "LOYALTY" by Kendrick Lamar featuring Rihanna has a pretty high gamma value for 'longing.' Meanwhile, "About Today" by The National (a sad, sad song about losing love) had higher gamma values for more topics, but the highest topic prob was 'in my feelings' (topic keywords include: falling, love, apart, drift).
 <hr>
 
 
@@ -569,16 +544,21 @@ time <- ggplot(gamma_year, aes(year, mean_gamma_yr, group = label, color = high,
   xlim(2014, 2021) +
   transition_reveal(year) + 
   coord_cartesian(clip = 'off') + 
-  labs(y = 'Mean gamma (topic probability)') + 
+  labs(y = 'Mean gamma') + 
   theme_classic() +
   theme(legend.position = 'none',
         axis.title.x = element_blank(),
         plot.margin = margin(5, 75, 1, 5),
         text = element_text(size=20))
 
-animate(time, duration = 9.5)
+anim_save("time.gif", time, duration = 9.5)
 ```
-<br>  
+
+<center>
+![](time.gif)
+</center>
+
+<hr>
 
 ## Conclusions
 
@@ -587,20 +567,22 @@ animate(time, duration = 9.5)
 - wanderer: I was traveling a lot looking for grad schools and visiting friends around 2017-2018
 - glow up: I was becoming my best self until.....2020.....(joking!)
 
-<hr>
+<br>
 
 ### A few caveats:
 - This dataset is far from comprehensive or complete. It's based on whatever formula Spotify uses to determine our yearly "Top Songs." It's unclear if the formula is based on listen count and/or other metrics.
 - The analysis here doesn't account for covariates like the song's rank in the Top 100. 
 - The labels here are pretty subjective, but there doesn't seem to be a standard way of labeling the topics. So I got to have fun thinking about them!
 - I couldn't filter out all non-English words as 'stop words.' For example, "Remember Me" by Miguel featuring Natalia Lafourcade has ~40% lyrics in Spanish. In this and other multilingual songs, I didn't filter out all non-English words. This limitation inevitably messed with the exclusivity of words in topics and topic fitting.
-<hr>
+
+<br>
 
 ### A main takeaway:
 Even though it was fun working with these data and packages, this modeling and visualization approach is no replacement for listening and feeling the music we love! No single topic label or audio metric can encapsulate the songs' entire mood and meaning. Nevertheless, I enjoyed learning how to run and visualize structural topic models with this exercise. I hope some of this blog inspires you to look at what you listen to and try to identify your own listening trends!
-
-
 <br>
+
+DM me on Twitter (at)danbtweeter or create an issue on GitHub if you'd like to leave a comment, suggestion, or critique!
+
 <br>
 
 <hr>
