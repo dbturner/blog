@@ -1,6 +1,9 @@
-<br>  
-
-# Blog Posts:  
+---
+title: Blog Posts
+output: 
+  html_document:
+    theme: sandstone
+---
 
 <hr>
 
