@@ -322,7 +322,7 @@ gamma_tidy <- tidy(topic_model, matrix = "gamma",
 Here's the real fun part — interpreting the topics. As a reminder, we are only analyzing the text of the lyrics (for now). We'll get into audio features later in the visualizations.
 <br>
 
-I love pop music, but pop lyrics don't tend to vary much. Nevertheless, I tried my best to label these topics for this heurestic exercise. I took liberty "labeling" the topics from the STMs into meaningful language. There are quantitative ways to do label topics, like with the `labelTopics()` function, which I also used to determine my labels. For instance, 'rain' and 'loyalty' were two of the top words for Topic 6 (labeled 'longing') in terms of _highest probability_ and _FREX_. In Topic 8 (labeled 'big dreams'), the top words for _FREX_ and _Score_ were 'stamina,' 'dna,' and 'greatest.'
+I love pop music, but pop lyrics don't tend to vary much. Nevertheless, I tried my best to label these topics for this heuristic exercise. I took liberty "labeling" the topics from the STMs into meaningful language. There are quantitative ways to do label topics, like with the `labelTopics()` function, which I also used to determine my labels. For instance, 'rain' and 'loyalty' were two of the top words for Topic 6 (labeled 'longing') in terms of _highest probability_ and _FREX_. In Topic 8 (labeled 'big dreams'), the top words for _FREX_ and _Score_ were 'stamina,' 'dna,' and 'greatest.'
 
 
 ```{r prep_abridged_gamma, message = FALSE, warning = FALSE, tidy.opts=list(width.cutoff=20)}
