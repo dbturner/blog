@@ -87,7 +87,7 @@ _In this post, I will..._
 * To connect these songs to their lyrics, I used the [`geniusr` R package](https://ewenme.github.io/geniusr/) to search the lyrics for each song. This step was tough because some of my top songs are instrumental or remixes and didn’t fit well into my search loop. For those songs, I searched for lyrics separately. 
 
 <br>
-To assemble a dataset that could be useful to interpret with structural topic models, I had to remove songs were the majority of the lyrics were not in English. A future blog post may model songs with lyrics mostly in Spanish. Since this blog is not about collecting data from the Spotify and Genius APIs, I'm not going to highlight it here. However, to see a skeleton of the code I wrote (minus my playlist IDs and manual song entry), please see this post's source code [here](https://github.com/dbturner/dbturner.github.io/blob/main/blog/blog_1_spotify_100_stm.Rmd).
+To assemble a dataset that could be useful to interpret with structural topic models, I had to remove songs were the majority of the lyrics were not in English. A future blog post may model songs with lyrics mostly in Spanish. Since this blog is not about collecting data from the Spotify and Genius APIs, I'm not going to highlight it here. However, to see a skeleton of the code I wrote (minus my playlist IDs and manual song entry), please see this post's source code [here](https://github.com/dbturner/blog/blob/main/2March2021_spotify_100_stm.Rmd).
 
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE, tidy.opts=list(width.cutoff=20)}
