@@ -273,7 +273,7 @@ lyrics_dfm_en <- lyrics_en %>%
 
 ## Modeling the data
 
-I was also inspired by [Julia Silge’s post](https://juliasilge.com/blog/evaluating-stm/) on structural topic models and a post on [topic modeling music genres](https://towardsdatascience.com/text-analytics-topic-modelling-on-music-genres-song-lyrics-deb82c86caa2) to use structural topic models to evaluate my song data. However, interpreting and visualizing the topics fit from these models can be notoriously hard, and some visualization ideas are demonstrated below.
+I was inspired by [Julia Silge’s post](https://juliasilge.com/blog/evaluating-stm/) on structural topic models to learn more about them with my song data. This other post also uses [topic modeling across music genres](https://towardsdatascience.com/text-analytics-topic-modelling-on-music-genres-song-lyrics-deb82c86caa2) to draw common trends between types of songs. In short, structural topic models use machine learning to infer a documents' topics from its text. However, interpreting and visualizing the topics fit from these models can be notoriously hard, and some visualization ideas are demonstrated below.
 
 <br>
 To model my Top 100 Songs, we'll need to determine what is the "best" number of topics (_K_) that describe the data. These five values for K here are fairly arbitrary (so much as 15 topics is not that different from 16 topics). I spent a long time running a bunch of models not shown here with different values for _K_.
@@ -562,7 +562,7 @@ anim_save("time.gif", time, duration = 9.5)
 A few possible reasons for these patterns:  
 
 - in my feelings: I was generally getting less and less in my feelings until.....2020.....  
-- wanderer: I was traveling a lot looking for grad schools and visiting friends around 2017-2018  
+- wanderer: I was traveling a lot looking for grad schools and visiting friends around 2017-2018 and didn't really travel in 2020. 
 - glow up: I was becoming my best self until.....2020.....(joking!)
 
 <hr>
