@@ -557,10 +557,12 @@ anim_save("time.gif", time, duration = 9.5)
 <center>
 ![](time.gif)
 </center>
+<br>
 
-A few possible reasons for these patterns:
-- in my feelings: I was generally getting less and less in my feelings until.....2020.....
-- wanderer: I was traveling a lot looking for grad schools and visiting friends around 2017-2018
+A few possible reasons for these patterns:  
+
+- in my feelings: I was generally getting less and less in my feelings until.....2020.....  
+- wanderer: I was traveling a lot looking for grad schools and visiting friends around 2017-2018  
 - glow up: I was becoming my best self until.....2020.....(joking!)
 
 <hr>
@@ -576,7 +578,7 @@ A few possible reasons for these patterns:
 <br>
 
 ### A main takeaway:
-Even though it was fun working with these data and packages, this modeling and visualization approach is no replacement for listening and feeling the music we love! No single topic label or audio metric can encapsulate the songs' entire mood and meaning. Nevertheless, I enjoyed learning how to run and visualize structural topic models with this exercise. I hope some of this blog inspires you to look at what you listen to and try to identify your own listening trends!
+Even though it was fun working with these data and packages, this modeling and visualization approach is no replacement for listening and feeling the music we love! No single topic label or audio metric can encapsulate the songs' entire mood and meaning. Nevertheless, I enjoyed learning how to run and visualize structural topic models with this exercise. I hope some of this blog inspires you to look at your own listening habits!
 <br>
 
 DM me on Twitter (at)danbtweeter or create an issue on GitHub if you'd like to leave a comment, suggestion, or critique!
