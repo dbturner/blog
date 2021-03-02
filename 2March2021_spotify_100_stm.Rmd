@@ -319,7 +319,7 @@ gamma_tidy <- tidy(topic_model, matrix = "gamma",
 ```
 
 <br>
-Here's the real fun part — interpreting the topics. As a reminder, we are do a text analysis only on the lyrics (for now). We'll get into audio features later in the visualizations.
+Here's the real fun part — interpreting the topics. As a reminder, we are only analyzing the text of the lyrics (for now). We'll get into audio features later in the visualizations.
 <br>
 
 I love pop music, but pop lyrics don't tend to vary much. Nevertheless, I tried my best to label these topics for this heurestic exercise. I took liberty "labeling" the topics from the STMs into meaningful language. There are quantitative ways to do label topics, like with the `labelTopics()` function, which I also used to determine my labels. For instance, 'rain' and 'loyalty' were two of the top words for Topic 6 (labeled 'longing') in terms of _highest probability_ and _FREX_. In Topic 8 (labeled 'big dreams'), the top words for _FREX_ and _Score_ were 'stamina,' 'dna,' and 'greatest.'
@@ -518,7 +518,7 @@ ggplot(gamma_abr, aes(x = song, y = gamma, fill = label)) +
         text = element_text(size=12))
 ```
 
-Kind of cool that "LOYALTY" by Kendrick Lamar featuring Rihanna has a pretty high gamma value for 'longing.' Meanwhile, "About Today" by The National (a sad, sad song about losing love) had higher gamma values for more topics, but the highest topic prob was 'in my feelings' (topic keywords include: falling, love, apart, drift).
+Kind of cool that "LOYALTY" by Kendrick Lamar featuring Rihanna has a pretty high gamma value for 'longing.' Meanwhile, "About Today" by The National (a sad, sad song about losing love) had higher gamma values for more topics, but the highest gamma was 'in my feelings' (topic keywords include: falling, love, apart, drift).
 <hr>
 
 
@@ -558,16 +558,14 @@ anim_save("time.gif", time, duration = 9.5)
 ![](time.gif)
 </center>
 
-<hr>
-
-## Conclusions
-
-### A few possible correlations for what we're seeing here:
+A few possible reasons for these patterns:
 - in my feelings: I was generally getting less and less in my feelings until.....2020.....
 - wanderer: I was traveling a lot looking for grad schools and visiting friends around 2017-2018
 - glow up: I was becoming my best self until.....2020.....(joking!)
 
-<br>
+<hr>
+
+## Conclusions
 
 ### A few caveats:
 - This dataset is far from comprehensive or complete. It's based on whatever formula Spotify uses to determine our yearly "Top Songs." It's unclear if the formula is based on listen count and/or other metrics.
