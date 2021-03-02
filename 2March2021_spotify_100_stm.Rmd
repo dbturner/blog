@@ -436,7 +436,7 @@ There are more larger bubbles in recent years than earlier in my Spotify tenure.
 ### _My Music Moods_  
 </center>
 
-Next, I'll use the audio features Spotify already provides when you collect data from their API. A common analysis among the spotifyr posts is to visualize the “mood" of a group of songs with Spotify’s audio features, not solely the lyrics like in the structural topic models. The “mood” can be understood by the valence (positivity rating where lower values are more “negative”) and energy (lower values have lower energy). If we are to break up a plot of energy x valence like here in the [Sentify Shiny app](http://rcharlie.net/sentify/), we can see how my songs bunch up into each quadrant.  
+Next, I'll use the audio features Spotify already provides when you collect data from their API. A common analysis among the spotifyr posts is to visualize the “mood" of a group of songs with Spotify’s audio features, not solely the lyrics like in the structural topic models. The “mood” can be understood by the valence (positivity rating where lower values are more “negative”) and energy (lower values have lower energy). If we make a plot of energy x valence like here in the [Sentify Shiny app](http://rcharlie.net/sentify/), we can see how my top songs fall into each quadrant.  
 
 This `plotly` graph shows the moods of my Top 100 songs throughout seven years of my Spotify Wrapped playlists. Click play or drag the the year bar to see how many songs are happy, pleasant, sad, or angry in each year.
 
@@ -488,7 +488,7 @@ I seem to listen to more energetic songs as time goes on! 2014 seemed to be the 
 ### _Some Key Songs' Topics_  
 
 </center>
-Now, let's go back to the output from the structural topic model we ran in [Section 3](#modeling-the-data). Here are the gamma values (probabilities of a topic within a song) for a handful of songs that I picked out of arbitrary interest for this visualization. This visualization is just to show the variability in evenness of gammas across songs, and it's helpful to see how 
+Now, let's go back to the output from the structural topic model we ran in the [Modeling the data](#modeling-the-data) section. Here are the gamma values (probabilities of a topic within a song) for a handful of songs that I picked out of arbitrary interest for this visualization. This visualization is just to show the variability in evenness of gammas across songs, and it's helpful to see how 
 
 ```{r chunk, warning = FALSE, message = FALSE, fig.align = 'center'}
 group_colors1 <- c(`glow up` = "#B6B4C2", 
