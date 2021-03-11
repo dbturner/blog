@@ -581,7 +581,7 @@ A few possible reasons for these patterns:
 Even though it was fun working with these data and packages, this modeling and visualization approach is no replacement for listening and feeling the music we love! No single topic label or audio metric can encapsulate the songs' entire mood and meaning. Nevertheless, I enjoyed learning how to run and visualize structural topic models with this exercise. I hope some of this blog inspires you to look at your own listening habits!
 <br>
 
-Drop a comment below for comments/critiques/suggestions!
+Drop a comment as an issue or DM me on Twitter (at)danbtweeter!
 
 <br>
 
@@ -590,23 +590,3 @@ Drop a comment below for comments/critiques/suggestions!
 
 
 <br>
-
-<div id="disqus_thread"></div>
-<script>
-    /**
-    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
-    /*
-    var disqus_config = function () {
-    this.page.url = 'https://dbturner.github.io/blog/2March2021_spotify_100_stm.html';  // Replace PAGE_URL with your page's canonical URL variable
-    this.page.identifier = '/blog/2March2021_spotify_100_stm.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-    };
-    */
-    (function() { // DON'T EDIT BELOW THIS LINE
-    var d = document, s = d.createElement('script');
-    s.src = 'https://dbturner-github-io.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
