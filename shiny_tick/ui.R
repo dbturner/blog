@@ -18,10 +18,21 @@ shinyUI(fluidPage(
     
     theme = shinytheme("sandstone") ,
     
-    titlePanel("Shiny Tick Form"),
+    h1("Shiny Tick Data Collection Form"),
+    tags$hr(),
+
+    tags$h4("This Shiny App accompanies my blog post on using Shiny Apps for large-scale data collection.
+            Read the blog post here for more context."),
     
-    tags$br(),
-    tags$br(),
+    tags$h4("This App collects simple information about when an American Dog Tick was first observed in a season. 
+            We obtained this data from the iNaturalist database, as mentioned in the blog post. If you'd like to
+            try this out for yourself, try inputting data from", 
+            tags$a(href = "https://www.inaturalist.org/observations/47506053",
+                   "this observation"),
+            "on May 16, 2020 in Michigan (42.758688, -83.078898) with an observation ID of '47506053'. See the previous sample entries
+            at the bottom of the page if you need guidance."),
+    
+    tags$hr(),
     
     fluidRow(
         column(width = 1

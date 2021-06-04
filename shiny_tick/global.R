@@ -23,7 +23,7 @@ options(
   gargle_oauth_cache = ".secrets",
   gargle_oauth_email = TRUE,
   noaakey = noaa_token
-) # set
+)
 
 # Fill table with the responses that are in the Google Sheet. This line is important for the "server.R" file.
 table <- "responses"
