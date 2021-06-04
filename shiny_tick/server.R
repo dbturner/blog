@@ -1,23 +1,15 @@
-#
-# This is the server logic of a Shiny web application. You can run the
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
 
-# Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
+    
+    # Create input boxes for the iNaturalist observation data.
     output$meta_data <- renderUI({
         fluidRow(
             h4(tags$em("Initial data:")),
-            numericInput("id", "Occurrence ID:", ""),
+            textInput("obs_id", "Observation ID:", ""),
             dateInput("obs_date", "Tick observation date:"),
             textInput("obs_lat", "Tick observation latitude:", ""),
-            textInput("obs_lat", "Tick observation longitude:", ""),
+            textInput("obs_lon", "Tick observation longitude:", ""),
             selectInput("obs_state", "US State:", c("",
                                                   "Alabama",
                                                   "Alaska",
@@ -73,65 +65,64 @@ shinyServer(function(input, output, session) {
         )
     })
     
-    output$temp_data <- renderUI({
-        fluidRow(
-            h4(tags$em("Temperature data:")),
-            textInput("temp_lag_0", "t0", ""),
-            textInput("temp_lag_1", "t-1", ""),
-            textInput("temp_lag_2", "t-2", ""),
-            textInput("temp_lag_3", "t-3", ""),
-            textInput("temp_lag_4", "t-4", ""),
-            textInput("temp_lag_5", "t-5", ""),
-            textInput("temp_lag_6", "t-6", "")
-        )
-    })
     
-    observe({
-        x <- input$station_50
+    # After clicking the preview weather data table button, perform all these actions.
+    weather_data <- eventReactive(input$preview, {
         
-        req(input$station_50)
+        obs_lat_lon <- data.frame(id = input$obs_state, 
+                                  latitude = input$obs_lat, 
+                                  longitude = input$obs_lon)
         
-        if (x == "yes") {
-            updateTextInput(session, "temp_lag_0", value = "")
-            updateTextInput(session, "temp_lag_1", value = "")
-            updateTextInput(session, "temp_lag_2", value = "")
-            updateTextInput(session, "temp_lag_3", value = "")
-            updateTextInput(session, "temp_lag_4", value = "")
-            updateTextInput(session, "temp_lag_5", value = "")
-            updateTextInput(session, "temp_lag_6", value = "")
-        }
+        nearby_stations <- meteo_nearby_stations(lat_lon_df = obs_lat_lon, 
+                                                 radius = 100)
+        nearby_stations <- nearby_stations[[1]]
         
-        if (x == "no") {
-            updateTextInput(session, "temp_lag_0", value = "NA")
-            updateTextInput(session, "temp_lag_1", value = "NA")
-            updateTextInput(session, "temp_lag_2", value = "NA")
-            updateTextInput(session, "temp_lag_3", value = "NA")
-            updateTextInput(session, "temp_lag_4", value = "NA")
-            updateTextInput(session, "temp_lag_5", value = "NA")
-            updateTextInput(session, "temp_lag_6", value = "NA")
-        }
+        nearby_stations_abr <- stations %>%
+            semi_join(nearby_stations, by = "id") %>%
+            filter(element == "TAVG",
+                   last_year == 2021, 
+                   grepl("^US", id))
+        
+        key_stations <- nearby_stations %>%
+            semi_join(nearby_stations_abr) 
+        
+        obs_date_lag <- (as.Date(input$obs_date) - 30) 
+        
+        weather <- meteo_tidy_ghcnd(stationid = key_stations[1,1], 
+                                    date_min = obs_date_lag, 
+                                    date_max = input$obs_date) %>%
+            left_join(key_stations)  %>%
+            rename(station_id = id,
+                   tdate = date,
+                   station_name = name)
+        
+        weather <- weather %>%
+            mutate(obs_id = rep(input$obs_id, length(weather$tdate)),
+                   obs_date = as.character(rep(input$obs_date, length(weather$tdate))),
+                   obs_lat = rep(input$obs_lat, length(weather$tdate)),
+                   obs_lon = rep(input$obs_lon, length(weather$tdate)),
+                   obs_state = rep(input$obs_state, length(weather$tdate)),
+                   tdate = as.character(tdate)) %>%
+            select(tdate, tavg, tmin, tmax, obs_id, obs_date, obs_lat, obs_lon, obs_state, station_name, station_id, distance)
+        
+        as.data.frame(weather)
+        
     })
     
-    output$table <- renderUI({
-        fluidRow(
-            HTML("<div style ='font-size:92%' >"),
-            DT::dataTableOutput("responses", width = 700),
-            HTML("</div>")
-        )
-    })
     
-    formData <- reactive({
-        data <- sapply(fields, function(x) input[[x]])
-        data
-    })
+    # Render the weather data table on the top right panel.
+    output$weather_table <- renderDataTable({
+        weather_data()},
+        editable = FALSE, rownames= FALSE, options = list(scrollX = TRUE)
+    )
+
     
-    
-    # When the Submit button is clicked, save the form data
+    # Save the weather data by clicking the submit button.
     observeEvent(input$submit, {
-        saveData(formData())
+        saveData(weather_data())
     })
     
-    # Show the previous responses
+    # Refresh the Google Sheet when submitting new data.
     output$responses <- DT::renderDataTable({
         input$submit
         loadData()
@@ -139,33 +130,22 @@ shinyServer(function(input, output, session) {
     editable = FALSE, rownames= FALSE, options = list(scrollX = TRUE)
     )
     
-    values <- reactiveValues(date_vec = vector(length = 7))
-    
-    data <- eventReactive(input$date, {
-        
-        date_table_null$calendar_date <- map2(input$obs_date, sub_num, dateLag)
-        as.data.frame(date_table_null)
-        
+    # Create table with some aesthetic formatting.
+    output$table <- renderUI({
+        fluidRow(
+            HTML("<div style ='font-size:92%' >"),
+            DT::dataTableOutput("responses"),
+            HTML("</div>")
+        )
     })
     
-    output$date_table <- renderDataTable({
-        data()
-    })
-    
+    # If you want to put a new entry in the same session, reset the input boxes by clicking the reset button.
     observeEvent(input$reset, {
-        reset("id")
+        reset("obs_id")
         reset("obs_date")
-        reset("station")
-        reset("station_distance")
-        reset("station_50")
-        reset("temp_lag_0")
-        reset("temp_lag_1")
-        reset("temp_lag_2")
-        reset("temp_lag_3")
-        reset("temp_lag_4")
-        reset("temp_lag_5")
-        reset("temp_lag_6")
-        reset("temp_lag_7")
+        reset("obs_lat")
+        reset("obs_lon")
+        reset("obs_state")
     })
     
 })

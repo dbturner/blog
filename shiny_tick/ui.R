@@ -9,8 +9,8 @@ library(DT)
 library(shinyjs)
 library(shinyWidgets)
 library(purrr)
+library(rnoaa)
 
-# Define UI for application that draws a histogram
 shinyUI(fluidPage(
     setBackgroundColor(color = "#f0f0f0"),
     
@@ -29,7 +29,7 @@ shinyUI(fluidPage(
         
         column(3,
                tags$head(
-                   tags$style(HTML('#reset{background-color:#d43f3f}'))
+                   tags$style(HTML('#reset{background-color:#d43f3f}')) # This line sets the button color.
                ),
                actionButton("reset", "Reset data")
         ),
@@ -37,17 +37,11 @@ shinyUI(fluidPage(
         column(width = 1
         ),
         
-        column(3
-        ),
-        
-        column(width = 1
-        ),
-        
-        column(3,
+        column(6,
                tags$head(
-                   tags$style(HTML('#date{background-color:#00802b}'))
+                   tags$style(HTML('#preview{background-color:#00802b}'))
                ),
-               actionButton("date", "Print date table")
+               actionButton("preview", "Preview weather table")
         )
     ),
     
@@ -64,15 +58,9 @@ shinyUI(fluidPage(
         column(width = 1
         ),
         
-        column(width = 3,
-               uiOutput("temp_data")
-        ),
         
-        column(width = 1
-        ),
-        
-        column(width = 3,
-               dataTableOutput("date_table")
+        column(width = 6,
+               dataTableOutput("weather_table")
         )
         
     ),
@@ -83,22 +71,24 @@ shinyUI(fluidPage(
     fluidRow(
         column(1),
         
-        column(7,
-               tags$head(
-                   tags$style(HTML('#submit{background-color:#4f8fe8}'))
-               ),
-               actionButton("submit", "Submit data"),
-               tags$br(),
+        column(9,
                tags$br(),
                uiOutput("table"),
                tags$br(),
                h5("*Scroll within the table to observe all columns."),
                h5("To sort by the latest entries, use the date_time column."),
                tags$br(),
+               tags$br(),
+               tags$head(
+                   tags$style(HTML('#submit{background-color:#4f8fe8}'))
+               ),
+               actionButton("submit", "Submit data"),
+               tags$br(),
+               tags$br(),
                tags$br()
         ),
         
-        column(4)
+        column(1)
     )
 )
 )
