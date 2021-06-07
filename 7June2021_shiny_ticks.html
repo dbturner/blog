@@ -449,7 +449,7 @@ pre[class] {
 </div>
 <div id="building-the-app" class="section level2">
 <h2>Building the app</h2>
-<p>We have three files associated with our Shiny Tick app—<code>global.R</code>, <code>server.R</code>, and <code>ui.R</code>. I won’t go into all the details about what these files do, since there are entire books written about writing Shiny apps, like Hadley Wickham’s <a href="https://mastering-shiny.org/">Mastering Shiny</a> (2021).</p>
+<p>We have three files associated with our Shiny Tick app—<code>global.R</code>, <code>server.R</code>, and <code>ui.R</code>. I won’t go into all the details about what these files do, since there are entire books written about writing Shiny apps, like Hadley Wickham’s <a href="https://mastering-shiny.org/">Mastering Shiny</a> (2021). See the GitHub repo for my blog for the <a href="https://github.com/dbturner/blog/tree/main/shiny_tick">full code of each of these files</a>.</p>
 <p>First, we use the following packages:</p>
 <pre class="r"><code>library(shiny)
 library(shinythemes)
@@ -680,7 +680,7 @@ loadData &lt;- function() {
 </center>
 <p><br></p>
 <ol start="4" style="list-style-type: decimal">
-<li>After reviewing the preview, we’ll submit the data (aka append to the Google Sheet). The Google Sheet will refresh and display the most recent and all previous responses.</li>
+<li>After reviewing the preview, we click ‘Submit Data’ to append our weather data to the Google Sheet. The Google Sheet will refresh and display the most recent and all previous responses.</li>
 </ol>
 <center>
 <img src="shiny_google_sheet.png" style="width:65.0%" />
@@ -694,18 +694,15 @@ loadData &lt;- function() {
 <div id="lets-review-the-advantages-of-this-strategy" class="section level4">
 <h4>Let’s review the <em>advantages</em> of this strategy:</h4>
 <ol style="list-style-type: decimal">
-<li>All data are input uniformly, and error on the part of the user is reduced significantly. Unless the user inputs the wrong coordinates, this method standardizes the following items:<br />
-</li>
-</ol>
+<li>All data are input uniformly, and error on the part of the user is reduced significantly. Unless the user inputs the wrong coordinates, this method standardizes the following items:
 <ol style="list-style-type: lower-alpha">
 <li>how a weather station is chosen as the closest to the tick observation.<br />
 </li>
 <li>how the distance between the weather station and the tick observation is measured.</li>
-</ol>
-<ol start="2" style="list-style-type: decimal">
+</ol></li>
 <li><p>We needed to collect twelve variables for 2,428 tick observations and the temperature for 30 days before those observations (that’s <strong>903216</strong> cells in a spreadsheet!). Rather than manually inserting nearly a million (generously rounding up hahaha) values, we reduce that to just five variables entered into the Shiny app’s input boxes for those tick observations. That’s a 98.6% reduction in the number of cells that would hypothetically need to be entered by hand if we didn’t have this form.</p></li>
 <li><p>Reproducibility is increased with a clear workflow to collect the data. We didn’t have to point and click on Google or the NOAA website thousands of times - everything is maintained internally within the app and our downloaded iNaturalist data.</p></li>
-<li><p>When working with many many columns, the user can get lost in the spreadsheets. Now, the user only has to enter the spreadsheet if they are intentionally editing/correcting missing or misentered values. No more accidental deletes or entries.</p></li>
+<li><p>When working with many many columns, the user can get lost in the spreadsheets. Now, the user only has to enter the spreadsheet if they are intentionally editing/correcting missing or misentered values. No more accidental deletes or overwrites.</p></li>
 <li><p>While Google Forms and other “pre-made” forms are easier to make than a Shiny app that mimics them, I show here how integrating raw data collection with other information sources, like the NOAA API, can make these online forms that much more powerful.</p></li>
 </ol>
 </div>

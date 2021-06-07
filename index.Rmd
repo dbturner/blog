@@ -10,4 +10,6 @@ output:
 
 ## _2021_
 
+### - [_Shiny ticks, apps, and forms - integrating Shiny into data collection workflows_](7June2021_shiny_ticks.html) (7 June)
+
 ### - [_Grad School Musical: topic modeling and my Spotify Top 100 Songs_](2March2021_spotify_100_stm.html) (2 March)

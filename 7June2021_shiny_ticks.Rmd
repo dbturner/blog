@@ -85,7 +85,7 @@ Again, I want to quickly collect the weather (temperature) data for the month be
 <hr>
 
 ## Building the app
-We have three files associated with our Shiny Tick app—`global.R`, `server.R`, and `ui.R`. I won’t go into all the details about what these files do, since there are entire books written about writing Shiny apps, like Hadley Wickham’s [Mastering Shiny](https://mastering-shiny.org/) (2021). 
+We have three files associated with our Shiny Tick app—`global.R`, `server.R`, and `ui.R`. I won’t go into all the details about what these files do, since there are entire books written about writing Shiny apps, like Hadley Wickham’s [Mastering Shiny](https://mastering-shiny.org/) (2021). See the GitHub repo for my blog for the [full code of each of these files](https://github.com/dbturner/blog/tree/main/shiny_tick).
 
 First, we use the following packages:
 
@@ -337,7 +337,7 @@ After building the app with the three scripts we coded above, we deploy it to ou
 </center>
 <br>
 
-4. After reviewing the preview, we'll submit the data (aka append to the Google Sheet). The Google Sheet will refresh and display the most recent and all previous responses.
+4. After reviewing the preview, we click 'Submit Data' to append our weather data to the Google Sheet. The Google Sheet will refresh and display the most recent and all previous responses.
 
 <center>
 ![](shiny_google_sheet.png){width=65%}
@@ -353,14 +353,14 @@ So what was the point of writing an app that just connects to a spreadsheet to c
 #### Let's review the _advantages_ of this strategy:  
 
 1. All data are input uniformly, and error on the part of the user is reduced significantly. Unless the user inputs the wrong coordinates, this method standardizes the following items:  
-  a. how a weather station is chosen as the closest to the tick observation.  
-  b. how the distance between the weather station and the tick observation is measured.  
+    a. how a weather station is chosen as the closest to the tick observation.  
+    b. how the distance between the weather station and the tick observation is measured.  
 
 2. We needed to collect twelve variables for 2,428 tick observations and the temperature for 30 days before those observations (that's **903216** cells in a spreadsheet!).  Rather than manually inserting nearly a million (generously rounding up hahaha) values, we reduce that to just five variables entered into the Shiny app's input boxes for those tick observations. That's a 98.6% reduction in the number of cells that would hypothetically need to be entered by hand if we didn't have this form.  
   
 3. Reproducibility is increased with a clear workflow to collect the data. We didn't have to point and click on Google or the NOAA website thousands of times - everything is maintained internally within the app and our downloaded iNaturalist data.  
 
-4. When working with many many columns, the user can get lost in the spreadsheets. Now, the user only has to enter the spreadsheet if they are intentionally editing/correcting missing or misentered values. No more accidental deletes or entries.  
+4. When working with many many columns, the user can get lost in the spreadsheets. Now, the user only has to enter the spreadsheet if they are intentionally editing/correcting missing or misentered values. No more accidental deletes or overwrites.  
 
 5. While Google Forms and other "pre-made" forms are easier to make than a Shiny app that mimics them, I show here how integrating raw data collection with other information sources, like the NOAA API, can make these online forms that much more powerful.  
 
