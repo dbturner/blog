@@ -6,7 +6,7 @@ shinyServer(function(input, output, session) {
     output$meta_data <- renderUI({
         fluidRow(
             h4(tags$em("Initial data:")),
-            textInput("obs_id", "Observation ID:", ""),
+            textInput("obs_id", "Observation ID (digits at the end of obs. URL):", ""),
             dateInput("obs_date", "Tick observation date:"),
             textInput("obs_lat", "Tick observation latitude:", ""),
             textInput("obs_lon", "Tick observation longitude:", ""),
@@ -122,7 +122,7 @@ shinyServer(function(input, output, session) {
         saveData(weather_data())
     })
     
-    # Refresh the Google Sheet when submitting new data.
+    # Render and refresh the Google Sheet when the app is opened or when submitting new data.
     output$responses <- DT::renderDataTable({
         input$submit
         loadData()

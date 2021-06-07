@@ -8,7 +8,6 @@ library(shinydashboard)
 library(DT)
 library(shinyjs)
 library(shinyWidgets)
-library(purrr)
 library(rnoaa)
 
 shinyUI(fluidPage(
@@ -22,14 +21,17 @@ shinyUI(fluidPage(
     tags$hr(),
 
     tags$h4("This Shiny App accompanies my blog post on using Shiny Apps for large-scale data collection.
-            Read the blog post here for more context."),
+            Read the",
+            tags$a(href = "https://dbturner.github.io/blog/7June2021_shiny_ticks.html",
+                   "full blog post"),
+                   "for more context."),
     
     tags$h4("This App collects simple information about when an American Dog Tick was first observed in a season. 
             We obtained this data from the iNaturalist database, as mentioned in the blog post. If you'd like to
             try this out for yourself, try inputting data from", 
-            tags$a(href = "https://www.inaturalist.org/observations/47506053",
-                   "this observation"),
-            "on May 16, 2020 in Michigan (42.758688, -83.078898) with an observation ID of '47506053'. See the previous sample entries
+            tags$a(href = "https://www.inaturalist.org/observations?taxon_id=52155",
+                   "any of these observations"),
+            ". Previewing and submitting the data may take a few seconds for processing. See the previous sample entries
             at the bottom of the page if you need guidance."),
     
     tags$hr(),
@@ -84,10 +86,11 @@ shinyUI(fluidPage(
         
         column(9,
                tags$br(),
+               h3("Google Sheet (previous responses):"),
+               tags$br(),
                uiOutput("table"),
                tags$br(),
                h5("*Scroll within the table to observe all columns."),
-               h5("To sort by the latest entries, use the date_time column."),
                tags$br(),
                tags$br(),
                tags$head(

@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Shiny ticks, apps, and forms - integrating Shiny into data collection workflows</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/sandstone.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Dan Turner</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://dbturner.github.io/index.html">Home</a>
+</li>
+<li>
+  <a href="https://dbturner.github.io/research.html">Research</a>
+</li>
+<li>
+  <a href="https://dbturner.github.io/publications.html">Publications</a>
+</li>
+<li>
+  <a href="https://dbturner.github.io/blog">Blog</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Shiny ticks, apps, and forms - integrating Shiny into data collection workflows</h1>
+
+</div>
+
+
+<style type="text/css">
+
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 11px
+}
+</style>
+<style>
+.column-left{
+  float: left;
+  width: 70%;
+  text-align: left;
+}
+.column-right{
+  float: right;
+  width: 28%;
+  text-align: center;
+}
+</style>
+<style type="text/css">
+pre {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+</style>
+<hr>
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>I’m deep into the data collection phase of my dissertation. Spreadsheets fly amuck in the cloud. My Evernote is my lifeline to produce some weeks.</p>
+<p>I’ve always struggled inputting data into spreadsheets. I can’t keep track of the column and row headers, and color-coding cells gives me a headache. Collaborating on spreadsheets grows multiplicatively more complicated with each person added to the project. Cross referencing across window panes brings its own problems.</p>
+<p>So, I took the plunge to integrate Shiny into my data collection workflows because I wanted to streamline how I collect information across multiple sources. I’d never written a Shiny app before a couple months ago, and the learning curve while self-teaching was steep, but manageable. And Shiny’s powerful integration with website APIs, code to tidy and wrangle data, and quick calculations paid off. In this post, I’ll reflect on the advantages of integrating Shiny into data collection workflows that typically involved a plethora of spreadsheet columns, multiple data sources, and online forms connected to spreadsheets.</p>
+<p>Using a heuristic case study, I’ll show the advantages of using interactive Shiny apps to streamline data collection workflows over other spreadsheet and form options. I’ll go through writing a sample Shiny app; much of this code and approach was inspired by Dean Attali’s posts on <a href="https://deanattali.com/2015/06/14/mimicking-google-form-shiny/">Mimicking a Google Form with a Shiny app</a>. Then, I’ll reflect on the experience, the approach’s advantages, and some limitations.</p>
+<p><strong>If you want to go straight to the completed app, <a href="https://dbturner.shinyapps.io/shiny_tick/">click here</a>.</strong></p>
+<hr>
+<p><em>In this post, I will…</em></p>
+<ul>
+<li>integrate Shiny, Google Sheets, and NOAA’s API to quickly collect data for a hypothetical project about temperature cues for ticks to emerge.</li>
+</ul>
+<hr>
+</div>
+<div id="talking-about-ticks" class="section level2">
+<h2>Talking about ticks</h2>
+<p>I dread spring/early summer for the ticks. Around this time of year, I can’t walk around a field in Michigan without finding a tick when I return home. However, for this exercise, I’m not really sure ticks’ temperature cues to emerge, and I want to know when I have to hole up inside to avoid the ticks.</p>
+<p>I downloaded the tick observations from the <a href="https://www.gbif.org/">Global Biodiversity Information Facility</a> (GBIF DOI: 10.15436/dl.ezhv96). I searched on 16 April 2021 for the American Dog Tick (Dermacentor variabilis) in the United States recorded in the <a href="https://www.inaturalist.org/">iNaturalist database</a>. I won’t post the data on GitHub, but feel free to try out GBIF and iNaturalist on your own to get the data.</p>
+<pre class="r"><code>head(tick)</code></pre>
+<pre><code>##                                        occurrenceID                species
+## 1 https://www.inaturalist.org/observations/72476195 Dermacentor variabilis
+## 2 https://www.inaturalist.org/observations/72314652 Dermacentor variabilis
+## 3 https://www.inaturalist.org/observations/72558645 Dermacentor variabilis
+## 4 https://www.inaturalist.org/observations/72563819 Dermacentor variabilis
+## 5 https://www.inaturalist.org/observations/72490531 Dermacentor variabilis
+## 6 https://www.inaturalist.org/observations/72231911 Dermacentor variabilis
+##   occurrenceStatus decimalLatitude decimalLongitude                 day
+## 1       California        33.09278       -116.99533 2021-03-30T13:55:50
+## 2    Massachusetts        42.31290        -71.12962 2021-03-28T18:42:51
+## 3    Massachusetts        42.32935        -71.56032 2021-03-31T17:25:02
+## 4    Massachusetts        42.62296        -71.28981 2021-03-31T17:01:56
+## 5           Oregon        45.54879       -122.64531 2021-03-30T17:14:50
+## 6          Indiana        39.20503        -86.52912 2021-03-27T13:51:33</code></pre>
+<p>Again, I want to quickly collect the weather (temperature) data for the month before each occurrence. However, let’s say there’s no quick automated way of searching for the temperature at a particular geographic coordinate for a month. We’ll search the dates and coordinates individually. Fortunately, <a href="https://docs.ropensci.org/rnoaa/index.html"><code>rnoaa</code></a> helps interface with the US National Oceanic and Atmospheric Administration’s (NOAA) weather data so we can do a lot of searching for temperatures and location under the hood. Instead of over 70,000 temperature searches, we only have to search once for the observation date, and the rest will be automatically filled out.</p>
+<hr>
+</div>
+<div id="building-the-app" class="section level2">
+<h2>Building the app</h2>
+<p>We have three files associated with our Shiny Tick app—<code>global.R</code>, <code>server.R</code>, and <code>ui.R</code>. I won’t go into all the details about what these files do, since there are entire books written about writing Shiny apps, like Hadley Wickham’s <a href="https://mastering-shiny.org/">Mastering Shiny</a> (2021).</p>
+<p>First, we use the following packages:</p>
+<pre class="r"><code>library(shiny)
+library(shinythemes)
+library(shinydashboard)
+library(DT)
+library(shinyjs)
+library(shinyWidgets)
+library(rnoaa)</code></pre>
+<p><br></p>
+<ol style="list-style-type: decimal">
+<li>In the <code>global.R</code> file, we house our Global Environmental variables and functions. Some key ones for this exercise will be:</li>
+</ol>
+<ul>
+<li>defining the fields that will be populated in the Google Sheet connected to our Shiny app:</li>
+</ul>
+<pre class="r"><code>fields &lt;- c(&quot;tdate&quot;, 
+            &quot;tavg&quot;, 
+            &quot;tmin&quot;, 
+            &quot;tmax&quot;, 
+            &quot;obs_id&quot;, 
+            &quot;obs_date&quot;, 
+            &quot;obs_lat&quot;, 
+            &quot;obs_lon&quot;, 
+            &quot;obs_state&quot;, 
+            &quot;station_name&quot;, 
+            &quot;station_id&quot;, 
+            &quot;distance&quot;)</code></pre>
+<ul>
+<li>writing functions that save (append) the data produced in Shiny and load the entire Google Sheet upon opening the app or submitting data.</li>
+</ul>
+<pre class="r"><code>saveData &lt;- function(data) {
+  data &lt;- as.data.frame(data) # Make sure the data object that has all the weather information is a data frame
+  
+  sheet_append(ssid_shiny_tick, data) # Append all 31 rows to the Google Sheet.
+}
+
+loadData &lt;- function() {
+  # Read the data
+  read_sheet(ssid_shiny_tick)
+}</code></pre>
+<p><br></p>
+<ol start="2" style="list-style-type: decimal">
+<li>In the <code>server.R</code> file, we’ll define inputs and outputs that will interact with the user. The inputs and outputs are:</li>
+</ol>
+<ul>
+<li>Inputs for the data about each iNaturalist observation.</li>
+</ul>
+<pre class="r"><code>    output$meta_data &lt;- renderUI({
+        fluidRow(
+            h4(tags$em(&quot;Initial data:&quot;)),
+            textInput(&quot;obs_id&quot;, &quot;Observation ID:&quot;, &quot;&quot;),
+            dateInput(&quot;obs_date&quot;, &quot;Tick observation date:&quot;),
+            textInput(&quot;obs_lat&quot;, &quot;Tick observation latitude:&quot;, &quot;&quot;),
+            textInput(&quot;obs_lon&quot;, &quot;Tick observation longitude:&quot;, &quot;&quot;),
+            selectInput(&quot;obs_state&quot;, &quot;US State:&quot;, c(&quot;&quot;,
+                                                  &quot;Alabama&quot;,
+                                                  &quot;Alaska&quot;,
+                                                  &quot;Arizona&quot;,
+                                                  &quot;Arkansas&quot;,
+                                                  &quot;California&quot;,
+                                                  &quot;Colorado&quot;,
+                                                  &quot;Connecticut&quot;,
+                                                  &quot;Delaware&quot;,
+                                                  &quot;Florida&quot;,
+                                                  &quot;Georgia&quot;,
+                                                  &quot;Hawaii&quot;,
+                                                  &quot;Idaho&quot;,
+                                                  &quot;Illinois&quot;,
+                                                  &quot;Indiana&quot;,
+                                                  &quot;Iowa&quot;,
+                                                  &quot;Kansas&quot;,
+                                                  &quot;Kentucky&quot;,
+                                                  &quot;Louisiana&quot;,
+                                                  &quot;Maine&quot;,
+                                                  &quot;Maryland&quot;,
+                                                  &quot;Massachusetts&quot;,
+                                                  &quot;Michigan&quot;,
+                                                  &quot;Minnesota&quot;,
+                                                  &quot;Mississippi&quot;,
+                                                  &quot;Missouri&quot;,
+                                                  &quot;Montana&quot;,
+                                                  &quot;Nebraska&quot;,
+                                                  &quot;Nevada&quot;,
+                                                  &quot;New Hampshire&quot;,
+                                                  &quot;New Jersey&quot;,
+                                                  &quot;New Mexico&quot;,
+                                                  &quot;New York&quot;,
+                                                  &quot;North Carolina&quot;,
+                                                  &quot;North Dakota&quot;,
+                                                  &quot;Ohio&quot;,
+                                                  &quot;Oklahoma&quot;,
+                                                  &quot;Oregon&quot;,
+                                                  &quot;Pennsylvania&quot;,
+                                                  &quot;Rhode Island&quot;,
+                                                  &quot;South Carolina&quot;,
+                                                  &quot;South Dakota&quot;,
+                                                  &quot;Tennessee&quot;,
+                                                  &quot;Texas&quot;,
+                                                  &quot;Utah&quot;,
+                                                  &quot;Vermont&quot;,
+                                                  &quot;Virginia&quot;,
+                                                  &quot;Washington&quot;,
+                                                  &quot;West Virginia&quot;,
+                                                  &quot;Wisconsin&quot;,
+                                                  &quot;Wyoming&quot;))
+            
+        )
+    })</code></pre>
+<ul>
+<li>A bunch of code under the hood that searches the NOAA data for weather information on the observation date and 30 days before that. See the comments in in the chunk for more information about what the code does.</li>
+</ul>
+<pre class="r"><code>    # save the weather data locally when the preview button is hit
+    weather_data &lt;- eventReactive(input$preview, { 
+        
+        obs_lat_lon &lt;- data.frame(id = input$obs_state, 
+                                  latitude = input$obs_lat, 
+                                  longitude = input$obs_lon) # make a dataframe of the information provided by the user
+        
+        # search for all nearby NOAA stations within a 100 km radius of the observation location
+        nearby_stations &lt;- meteo_nearby_stations(lat_lon_df = obs_lat_lon, 
+                                                 radius = 100) 
+        # pull out dataframe with the stations from a list
+        nearby_stations &lt;- nearby_stations[[1]] 
+        
+        # for consistency in data reporting, we&#39;ll filter the data by those that report at least average temperature, have data until 2021, and are from a reporting station in the United States (not Canada or Mexico)
+        nearby_stations_abr &lt;- stations %&gt;%
+            semi_join(nearby_stations, by = &quot;id&quot;) %&gt;%
+            filter(element == &quot;TAVG&quot;,
+                   last_year == 2021, 
+                   grepl(&quot;^US&quot;, id)) 
+        
+        # create a dataframe with all the information from both dataframes
+        key_stations &lt;- nearby_stations %&gt;%
+            semi_join(nearby_stations_abr) 
+        
+        # get the earliest date to collect data
+        obs_date_lag &lt;- (as.Date(input$obs_date) - 30) 
+        
+        # search the weather data for the nearest station to the observation
+        # then combine weather data with data about the station
+        # rename some column names
+        weather &lt;- meteo_tidy_ghcnd(stationid = key_stations[1,1], 
+                                    date_min = obs_date_lag, 
+                                    date_max = input$obs_date) %&gt;% 
+            left_join(key_stations) %&gt;% 
+            rename(station_id = id,
+                   tdate = date,
+                   station_name = name) 
+        
+        # redefine the weather dataframe by adding the user inputs to their own columns
+        # then tidy the weather dataframe up
+        weather &lt;- weather %&gt;%
+            mutate(obs_id = rep(input$obs_id, length(weather$tdate)),
+                   obs_date = as.character(rep(input$obs_date, length(weather$tdate))),
+                   obs_lat = rep(input$obs_lat, length(weather$tdate)),
+                   obs_lon = rep(input$obs_lon, length(weather$tdate)),
+                   obs_state = rep(input$obs_state, length(weather$tdate)),
+                   tdate = as.character(tdate)) %&gt;% 
+            select(tdate, tavg, tmin, tmax, obs_id, obs_date, obs_lat, obs_lon, obs_state, station_name, station_id, distance)
+        
+        as.data.frame(weather)
+        
+    })</code></pre>
+<ul>
+<li>Render the preview table and Google Sheet</li>
+</ul>
+<pre class="r"><code>    output$weather_table &lt;- renderDataTable({
+        weather_data()},
+        editable = FALSE, rownames= FALSE, options = list(scrollX = TRUE)
+    ) # render weather table
+
+    output$responses &lt;- DT::renderDataTable({
+        input$submit
+        loadData()
+    },
+    editable = FALSE, rownames= FALSE, options = list(scrollX = TRUE)
+    ) # render the Google Sheet table
+    
+    output$table &lt;- renderUI({
+        fluidRow(
+            HTML(&quot;&lt;div style =&#39;font-size:92%&#39; &gt;&quot;),
+            DT::dataTableOutput(&quot;responses&quot;),
+            HTML(&quot;&lt;/div&gt;&quot;)
+        ) 
+    }) # format the table from the Google Sheet data    </code></pre>
+<ul>
+<li>Submit data when <code>Submit</code> button pressed</li>
+</ul>
+<pre class="r"><code>    observeEvent(input$submit, {
+        saveData(weather_data())
+    })</code></pre>
+<ul>
+<li>If inputting a new entry in the same session, reset the input boxes by clicking the <code>Reset</code> button.</li>
+</ul>
+<pre class="r"><code>    observeEvent(input$reset, {
+        reset(&quot;obs_id&quot;)
+        reset(&quot;obs_date&quot;)
+        reset(&quot;obs_lat&quot;)
+        reset(&quot;obs_lon&quot;)
+        reset(&quot;obs_state&quot;)
+    })</code></pre>
+<p><br></p>
+<ol start="3" style="list-style-type: decimal">
+<li>In the <code>ui.R</code> file, we customize the user interface of the inputs and outputs defined in the <code>server.R</code> file. See the (<code>u.R</code> script) for the code.</li>
+</ol>
+<hr>
+</div>
+<div id="the-app" class="section level2">
+<h2>The app</h2>
+<p>After building the app with the three scripts we coded above, we deploy it to our server for our team to collect the data! We’ll walk through the app that you can also view <a href="https://dbturner.shinyapps.io/shiny_tick/">here</a>.</p>
+<p><br> 1. When we navigate to the Shiny app URL, we see this screen first.</p>
+<center>
+<img src="shiny_first_screen.png" alt="Shiny first screen" style="width:65.0%" />
+</center>
+<p><br></p>
+<ol start="2" style="list-style-type: decimal">
+<li>On the left of the app, we have the five input values for each tick observation. Note: the ‘Reset Data’ button will reset on these inputs.</li>
+</ol>
+<center>
+<img src="shiny_data_inputs.png" style="width:65.0%" />
+</center>
+<p><br></p>
+<ol start="3" style="list-style-type: decimal">
+<li>After inputting the data, we hit the “Preview Weather Table” button and preview the weather data we’ll soon append to the Google Sheet.</li>
+</ol>
+<center>
+<img src="shiny_preview_table.png" style="width:65.0%" />
+</center>
+<p><br></p>
+<ol start="4" style="list-style-type: decimal">
+<li>After reviewing the preview, we’ll submit the data (aka append to the Google Sheet). The Google Sheet will refresh and display the most recent and all previous responses.</li>
+</ol>
+<center>
+<img src="shiny_google_sheet.png" style="width:65.0%" />
+</center>
+<p><br></p>
+<hr>
+</div>
+<div id="the-wrap-up" class="section level2">
+<h2>The wrap-up</h2>
+<p>So what was the point of writing an app that just connects to a spreadsheet to collect data? Why not just input all the information directly into the spreadsheet? Why not just use a preformatted form, like Google Forms?</p>
+<div id="lets-review-the-advantages-of-this-strategy" class="section level4">
+<h4>Let’s review the <em>advantages</em> of this strategy:</h4>
+<ol style="list-style-type: decimal">
+<li>All data are input uniformly, and error on the part of the user is reduced significantly. Unless the user inputs the wrong coordinates, this method standardizes the following items:<br />
+</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>how a weather station is chosen as the closest to the tick observation.<br />
+</li>
+<li>how the distance between the weather station and the tick observation is measured.</li>
+</ol>
+<ol start="2" style="list-style-type: decimal">
+<li><p>We needed to collect twelve variables for 2,428 tick observations and the temperature for 30 days before those observations (that’s <strong>903216</strong> cells in a spreadsheet!). Rather than manually inserting nearly a million (generously rounding up hahaha) values, we reduce that to just five variables entered into the Shiny app’s input boxes for those tick observations. That’s a 98.6% reduction in the number of cells that would hypothetically need to be entered by hand if we didn’t have this form.</p></li>
+<li><p>Reproducibility is increased with a clear workflow to collect the data. We didn’t have to point and click on Google or the NOAA website thousands of times - everything is maintained internally within the app and our downloaded iNaturalist data.</p></li>
+<li><p>When working with many many columns, the user can get lost in the spreadsheets. Now, the user only has to enter the spreadsheet if they are intentionally editing/correcting missing or misentered values. No more accidental deletes or entries.</p></li>
+<li><p>While Google Forms and other “pre-made” forms are easier to make than a Shiny app that mimics them, I show here how integrating raw data collection with other information sources, like the NOAA API, can make these online forms that much more powerful.</p></li>
+</ol>
+</div>
+<div id="lets-review-a-few-drawbacks" class="section level4">
+<h4>Let’s review a few <em>drawbacks</em>:</h4>
+<ol style="list-style-type: decimal">
+<li><p>For many people who collect data like those in this case study, Shiny may be unfamiliar, but hopefully posts like this can be a good place to start learning.</p></li>
+<li><p>Editing within the app is not possible with this approach. You’ll have to go back to the primary Google Sheet if you want to fix any issues. That can be a benefit though, if you want to prevent accidental mistakes that arise from directly entering data in the primary Google Sheet.</p></li>
+<li><p>Depending on where you host the Shiny app and how many hours are spent working with it, you may have to pay for additional server time.</p></li>
+</ol>
+<hr>
+<p>If you are spending tons of hours at the computer trying to streamline your data collection workflow, I hope you found this post helpful and you end up a lot happier than I was the day I found this dog tick on me! <br></p>
+<center>
+<img src="dan_dog_tick.jpg" style="width:40.0%" />
+</center>
+<hr>
+<p>Drop a comment as an issue or DM me on Twitter (at)danbtweeter!</p>
+<hr>
+<div id="post-last-updated-on-7-june-2021" class="section level5">
+<h5>Post last updated on 7 June 2021</h5>
+<p><br></p>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

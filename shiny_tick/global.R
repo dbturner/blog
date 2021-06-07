@@ -1,5 +1,6 @@
 library(googlesheets4)
 library(dplyr)
+library(here)
 
 # Set fields to fill that will appended to the Google Sheet.
 fields <- c("tdate", 
@@ -16,13 +17,13 @@ fields <- c("tdate",
             "distance")
 
 # Load NOAA Token. See here for more details about getting NOAA token and other NOAA functions used in this Shiny App: https://docs.ropensci.org/rnoaa/
-load("~/Documents/GitHub/blog/.secrets/noaa/noaa_token")
+# load(here("shiny_tick/.secrets/noaa/noaa_token"))
 
 # Set keys and tokens for APIs.
 options(
   gargle_oauth_cache = ".secrets",
   gargle_oauth_email = TRUE,
-  noaakey = noaa_token
+  noaakey = load(here(".secrets/noaa/noaa_token")) # set these paths to whatever location works best for you to keep these tokens private
 )
 
 # Fill table with the responses that are in the Google Sheet. This line is important for the "server.R" file.
