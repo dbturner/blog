@@ -9,7 +9,7 @@ navbar:
       href: https://dbturner.github.io/research.html
     - text: "Publications"
       href: https://dbturner.github.io/publications.html
-    - text: "Blog"  
+    - text: "Posts and Other Resources"  
       href: https://dbturner.github.io/blog
 
 output:
