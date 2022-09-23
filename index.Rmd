@@ -1,5 +1,5 @@
 ---
-title: Blog Posts
+title: Posts and Other Resources
 output: 
   html_document:
     theme: sandstone
@@ -7,6 +7,9 @@ output:
 
 <hr>
 
+## _2022_
+
+### - [_Raise the bar (a team-built website for ecology data visualization in R)](https://raisethebar.netlify.app/) (August)
 
 ## _2021_
 
