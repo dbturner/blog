@@ -9,7 +9,7 @@ output:
 
 ## _2022_
 
-### - [_Raise the bar (a team-built website for ecology data visualization in R)](https://raisethebar.netlify.app/) (August)
+### - [_Raise the bar (a team-built website for ecology data visualization in R)_](https://raisethebar.netlify.app/) (August)
 
 ## _2021_
 
